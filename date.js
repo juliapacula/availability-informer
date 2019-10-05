@@ -2,11 +2,15 @@ const moment = require('moment');
 
 module.exports = class Date {
   constructor(date) {
-    this.today = moment(date);
+    this.day = moment(date);
+  }
+
+  static get today() {
+    return moment().toDate();
   }
 
   get monday() {
-    return moment(this.today).weekday(1).startOf('day');
+    return moment(this.day).weekday(1).startOf('day');
   }
 
   get mondayDate() {
@@ -14,7 +18,7 @@ module.exports = class Date {
   }
 
   get friday() {
-    return moment(this.today).weekday(5).endOf('day');
+    return moment(this.day).weekday(5).endOf('day');
   }
 
   get fridayDate() {
