@@ -1,0 +1,21 @@
+{
+  "name": "table-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "googleapis": "^43.0.0",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0",
+    "node-html-parser": "^1.1.16",
+    "showdown": "^1.9.0",
+    "turndown": "^5.0.3",
+    "turndown-plugin-gfm": "^1.0.2"
+  }
+}
