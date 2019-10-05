@@ -1,8 +1,8 @@
 const moment = require('moment');
 
 module.exports = class Date {
-  constructor() {
-    this.today = moment();
+  constructor(date) {
+    this.today = moment(date);
   }
 
   get monday() {

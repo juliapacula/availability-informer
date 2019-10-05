@@ -1,27 +1,51 @@
-const Calendar = require('./calendar');
 const { userName, azure } = require('./calendar.config');
 const Date = require('./date');
 const Markdown = require('./markdown');
 const Page = require('./page');
 
 module.exports = class Wiki {
-  constructor(date) {
-    this.date = date || new Date();
-    this.calendar = new Calendar();
+  constructor(calendar) {
+    this.calendar = calendar;
+    this.date = calendar.getDate();
+  }
+
+  async updateWikiPage() {
+    try {
+      await this.getCurrentWeekPage();
+      const newContent = await this.getUpdatedContent();
+      await this.page.update(newContent);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async getCurrentWeekPage() {
     this.page = new Page(`${ azure.documentPath }/${ this.date.weekBoundaries }`);
-    await this.page.get();
+    try {
+      await this.page.get();
+    } catch (error) {
+      console.error(error);
+      console.log('Taking content from a template.');
+      await this.page.create();
+    }
   }
 
-  /* This method currently only takes first found table.
-   * In the future it should take this table where user is found */
-  async getRows() {
-    await this.getCurrentWeekPage();
-    this.root = Markdown.parseHtml(this.page.content);
+  async getUpdatedContent() {
+    const eventsGroup = await this.calendar.getGroupedEventsByDay(this.date.monday, this.date.friday);
 
-    return Markdown.getNodeChildren(this.root.querySelector('tbody'));
+    const row = await this.containingRow();
+
+    if (!row) {
+      throw Error('User was not found.');
+    }
+
+    const dayColumns = Markdown.getNodeChildren(row).slice(1);
+
+    for (let day = 0; day < dayColumns.length; day++) {
+      dayColumns[day].set_content(Date.parseDayEvents(eventsGroup[day]));
+    }
+
+    return Markdown.parseMarkdown(this.root.toString());
   }
 
   async containingRow() {
@@ -34,21 +58,11 @@ module.exports = class Wiki {
     });
   }
 
-  async getUpdatedContent() {
-    const eventsGroup = await this.calendar.getGroupedEventsByDay(this.date.monday, this.date.friday);
+  /* This method currently only takes first found table.
+   * In the future it should take this table where user is found */
+  async getRows() {
+    this.root = Markdown.parseHtml(this.page.content);
 
-    const row = await this.containingRow();
-    const dayColumns = Markdown.getNodeChildren(row).slice(1);
-
-    for (let day = 0; day < dayColumns.length; day++) {
-      dayColumns[day].set_content(Date.parseDayEvents(eventsGroup[day]));
-    }
-
-    return Markdown.parseMarkdown(this.root.toString());
-  }
-
-  async updateWikiPage() {
-    const newContent = await this.getUpdatedContent();
-    await this.page.update(newContent);
+    return Markdown.getNodeChildren(this.root.querySelector('tbody'));
   }
 };

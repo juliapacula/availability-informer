@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { google } = require('googleapis');
-const readline = require('readline');
+const readlineSync = require('readline-sync');
+const cp = require('child_process');
 
 const { googleToken } = require('./auth');
 
@@ -16,43 +17,47 @@ module.exports = class GoogleAuth {
       googleToken.redirectUris[0],
     );
 
-    const token = fs.readFileSync('token.json');
-
-    if (token) {
-      this.oAuth2Client.setCredentials(JSON.parse(token).tokens);
-    } else {
-      this.getAccessToken();
+    let token;
+    try {
+      const file = fs.readFileSync('token.json');
+      token = JSON.parse(file);
+    } catch {
+      this.getAccessToken().then(t => {
+        token = t;
+      });
+    } finally {
+      this.login(token);
     }
   }
 
-  getAccessToken() {
-    const authUrl = this.oAuth2Client.generateAuthUrl({
+  login(token) {
+    this.oAuth2Client.setCredentials(token);
+  }
+
+  async getAccessToken() {
+    const authUrl = this.generateAuthUrl();
+    const code = await this.readCodeFrom(authUrl);
+    const { tokens } = await this.oAuth2Client.getToken(code);
+    this.saveToken(tokens);
+
+    return tokens;
+  }
+
+  generateAuthUrl() {
+    return this.oAuth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: googleToken.scope,
     });
+  }
 
-    console.log('Authorize this app by visiting: ', authUrl);
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
+  async readCodeFrom(url) {
+    console.log('Authorize this app by visiting: ', url);
+    cp.execSync(`start chrome "${ url }"`);
+    return readlineSync.question('Enter the code from the browser: \n');
+  }
 
-    rl.question('Enter the code from auth page: ', (code) => {
-      rl.close();
-      this.oAuth2Client.getToken(code).then(({ tokens }) => {
-        this.oAuth2Client.setCredentials(tokens);
-        fs.writeFile('./token.json', JSON.stringify(token), (err) => {
-          if (err) {
-            console.error(err);
-          } else {
-            console.log('Token stored to ./token.json');
-          }
-        });
-
-        return this.oAuth2Client;
-      }).catch(error => {
-        console.error('Error accessing a auth token: \n' + error);
-      });
-    })
+  saveToken(token) {
+    fs.writeFileSync('./token.json', JSON.stringify(token));
+    console.log('Token stored to ./token.json');
   }
 };

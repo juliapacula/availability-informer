@@ -18,14 +18,19 @@ module.exports = class Api {
   }
 
   async put(url, body, etag) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${ personalAccessToken }`,
+    };
+
+    if (etag) {
+      headers['If-Match'] = etag;
+    }
+
     return await fetch(this.baseUrl + url, {
       method: 'PUT',
       body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'If-Match': etag,
-        'Authorization': `Basic ${ personalAccessToken }`,
-      },
+      headers,
     });
   }
 };

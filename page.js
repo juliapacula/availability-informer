@@ -10,17 +10,22 @@ module.exports = class Page {
   }
 
   async get() {
-    try {
-      const response = await this.api.get('&includeContent=True&api-version=5.1');
-      this.version = response.headers.get('ETag');
+    const response = await this.api.get('&includeContent=True&api-version=5.1');
 
-      const { id, content, url } = await response.json();
-      this.id = id;
-      this.content = content;
-      this.url = url;
-    } catch (error) {
-      console.error('There was a error fetching page: \n' + error);
+    if (response.status === 404) {
+      throw new Error('Page was not found.');
     }
+
+    if (!response.ok) {
+      throw new Error('Unable to fetch page.');
+    }
+
+    this.version = response.headers.get('ETag');
+
+    const { id, content, url } = await response.json();
+    this.id = id;
+    this.content = content;
+    this.url = url;
 
     return this;
   }
@@ -33,9 +38,22 @@ module.exports = class Page {
         this.version,
       );
 
-      console.log('Page updated correctly with status: ', response.status);
+      if (response.status === 201) {
+        console.log('Page was created.');
+      } else if (response.status === 200) {
+        console.log('Page was updated.');
+      } else {
+        throw new Error(`Update status: ${response.status} - ${response.statusText}`)
+      }
     } catch (error) {
       console.error('There was a error updating page: \n' + error);
     }
+  }
+
+  async create() {
+    const template = new Page(`${ azure.documentTemplatePath }`);
+    await template.get();
+
+    this.content = template.content;
   }
 };

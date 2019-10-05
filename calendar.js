@@ -4,10 +4,10 @@ const Date = require('./date');
 const { eventType, workCalendar } = require('./calendar.config');
 
 module.exports = class Calendar {
-  constructor() {
+  constructor(date) {
     this.auth = new GoogleAuth();
     this.calendar = google.calendar({ version: 'v3', auth: this.auth.oAuth2Client });
-    this.date = new Date();
+    this.date = date || new Date();
   }
 
   static getEventStart(event) {
@@ -16,6 +16,10 @@ module.exports = class Calendar {
 
   static getEventEnd(event) {
     return event.end.dateTime;
+  }
+
+  getDate() {
+    return this.date;
   }
 
   async getCalendars() {
@@ -44,9 +48,13 @@ module.exports = class Calendar {
   async getGroupedEventsByDay(start, end) {
     const events = await this.getOfficeEvents(start, end);
 
+    return this.groupEvents(events);
+  }
+
+  groupEvents(events) {
     const daysOfWeek = new Array(5);
 
-    for(let event of events) {
+    for (let event of events) {
       const weekday = Date.getWeekday(Calendar.getEventStart(event));
 
       if (daysOfWeek[weekday - 1] === undefined) {

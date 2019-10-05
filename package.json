@@ -2,9 +2,16 @@
   "name": "table-generator",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "bin": {
+    "wiki-hours": "./cli.js"
+  },
+  "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juliapacula/azure-wiki-update"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +21,10 @@
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "node-html-parser": "^1.1.16",
+    "readline-sync": "^1.4.10",
     "showdown": "^1.9.0",
     "turndown": "^5.0.3",
-    "turndown-plugin-gfm": "^1.0.2"
+    "turndown-plugin-gfm": "^1.0.2",
+    "yargs": "^14.0.0"
   }
 }
