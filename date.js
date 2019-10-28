@@ -38,6 +38,10 @@ module.exports = class Date {
   }
 
   static parseDayEvents(events) {
+    if (!events) {
+      return '';
+    }
+
     let final = '';
 
     for (let event = 0; event < events.length; event++) {
