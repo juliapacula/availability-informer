@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const { google } = require('googleapis');
 const readlineSync = require('readline-sync');
 const cp = require('child_process');
@@ -57,7 +58,7 @@ module.exports = class GoogleAuth {
   }
 
   saveToken(token) {
-    fs.writeFileSync('./token.json', JSON.stringify(token));
-    console.log('Token stored to ./token.json');
+    fs.writeFileSync(path.resolve(__dirname, 'token.json'), JSON.stringify(token));
+    console.log('Token stored to ' + path.resolve(__dirname, 'token.json'));
   }
 };
