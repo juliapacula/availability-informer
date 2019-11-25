@@ -19,7 +19,7 @@ module.exports = class GoogleAuth {
 
     let token;
     try {
-      const file = fs.readFileSync('token.json');
+      const file = fs.readFileSync(path.resolve(__dirname, 'token.json'));
       token = JSON.parse(file);
     } catch {
       this.getAccessToken().then(t => {
