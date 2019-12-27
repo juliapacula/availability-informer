@@ -2,7 +2,7 @@ const moment = require('moment');
 
 module.exports = class Date {
   constructor(date) {
-    this.day = moment(date);
+    this.day = moment(date, 'DD-MM-YYYY');
   }
 
   static get today() {
