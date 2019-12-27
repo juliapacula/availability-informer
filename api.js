@@ -12,7 +12,7 @@ module.exports = class Api {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Basic ${ personalAccessToken }`,
+        'Authorization': `Basic ${ this.encodePAT() }`,
       },
     });
   }
@@ -20,7 +20,7 @@ module.exports = class Api {
   async put(url, body, etag) {
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${ personalAccessToken }`,
+      'Authorization': `Basic ${ this.encodePAT() }`,
     };
 
     if (etag) {
@@ -32,5 +32,9 @@ module.exports = class Api {
       body: JSON.stringify(body),
       headers,
     });
+  }
+
+  encodePAT() {
+    return new Buffer.from(`:${personalAccessToken}`).toString('base64');
   }
 };
