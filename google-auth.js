@@ -53,7 +53,13 @@ module.exports = class GoogleAuth {
 
   async readCodeFrom(url) {
     console.log('Authorize this app by visiting: ', url);
-    cp.execSync(`start chrome "${ url }"`);
+
+    if (process.platform === 'win32') {
+      cp.execSync(`start chrome "${url}"`);
+    } else {
+      cp.execSync(`chromium-browser "${url}"`);
+    }
+
     return readlineSync.question('Enter the code from the browser: \n');
   }
 

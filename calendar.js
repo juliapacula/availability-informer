@@ -42,7 +42,7 @@ module.exports = class Calendar {
       timeMax: end.toISOString(),
     });
 
-    return events.data.items.filter(e => e.summary === eventType.office);
+    return events.data.items.filter(e => e.summary === eventType.office || e.summary === eventType.remote);
   }
 
   async getGroupedEventsByDay(start, end) {

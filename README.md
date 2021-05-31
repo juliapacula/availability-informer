@@ -8,7 +8,7 @@ Because this script has a connection with Google Calendar, there is a need for a
 To start, you have to create your `auth.js` file. This file has to have specific structure:
 ```
 module.exports = {
-  personalAccessToken: 'Your PAT encoded in Base64',
+  personalAccessToken: 'Your PAT',
   googleToken: {
     clientId: 'Client ID from Google Project OAuth',
     projectId: 'Project ID from Google Project OAuth',
