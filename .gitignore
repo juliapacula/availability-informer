@@ -1,5 +1,4 @@
 token.json
-calendar.config.js
-auth.js
+config/local.*
 /node_modules
 /.idea

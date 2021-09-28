@@ -2,9 +2,9 @@
 
 const yargs = require('yargs');
 
-const Wiki = require('./wiki');
-const Calendar = require('./calendar');
-const Date = require('./date');
+const Wiki = require('./src/azure-wiki/wiki');
+const Calendar = require('./src/calendar/calendar');
+const Date = require('./src/helpers/date');
 
 const argv = yargs
   .command('update', 'Updates table with events fetched from the calendar', (yargs) => {
@@ -19,7 +19,9 @@ const argv = yargs
   }, (argv) => {
     const date = new Date(argv.date);
     const calendar = new Calendar(date);
-    const wiki = new Wiki(calendar).updateWikiPage();
+    const wiki = new Wiki(calendar);
+
+    wiki.updateWikiPage().then();
   })
   .help()
   .argv;

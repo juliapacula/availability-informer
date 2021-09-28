@@ -1,0 +1,26 @@
+{
+  "googleAuth": {
+    "personalAccessToken": "",
+    "googleToken": {
+      "clientId": "",
+      "projectId": "",
+      "clientSecret": "",
+      "redirectUris": [],
+      "scope": []
+    }
+  },
+  "userName": "",
+  "workCalendar": "",
+  "azureWikiPath": "",
+  "azure": {
+    "organizationName": "",
+    "teamProjectName": "",
+    "wikiName": "",
+    "documentPath": "",
+    "documentTemplatePath": ""
+  },
+  "eventType": {
+    "office": "",
+    "remote": ""
+  }
+}
