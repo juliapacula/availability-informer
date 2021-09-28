@@ -1,0 +1,12 @@
+{
+  "name": "Availability informer",
+  "description": "Application to update Azure Wiki, based on personal calendar.",
+  "repository": "https://github.com/juliapacula/availability-informer",
+  "keywords": [
+    "node",
+    "google",
+    "azure",
+    "wiki"
+  ],
+  "image": "heroku/nodejs"
+}

@@ -3,19 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "bin": {
-    "wiki-hours": "./cli.js"
+    "availability-informer": "./cli.js"
+  },
+  "engines": {
+    "node": "14.x"
   },
   "main": "cli.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/juliapacula/availability-informer"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "config": "^3.3.6",
     "googleapis": "^43.0.0",
