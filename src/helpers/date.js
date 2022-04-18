@@ -10,6 +10,18 @@ module.exports = class Date {
         return moment().toDate();
     }
 
+    get monthName() {
+        return moment(this.day).format('MMMM YYYY');
+    }
+
+    get startOfMonth() {
+        return moment(this.day).date(1).startOf('day');
+    }
+
+    get endOfMonth() {
+        return moment(this.day).date(31).endOf('day');
+    }
+
     get monday() {
         return moment(this.day).weekday(1).startOf('day');
     }
@@ -36,6 +48,16 @@ module.exports = class Date {
 
     static getWeekday(date) {
         return moment(date).weekday();
+    }
+
+    static countHoursBetweenDates(start, end) {
+        const getHour = (event) => parseInt(event.split(':')[0], 10);
+        const getMinutes = (event) => parseInt(event.split(':')[1], 10);
+        const momentStart = moment().set({ hours: getHour(start), minutes: getMinutes(start) });
+        const momentEnd = moment().set({ hours: getHour(end), minutes: getMinutes(end) });
+        const duration = moment.duration(momentEnd.diff(momentStart));
+
+        return duration.asHours();
     }
 
     static parseDayEvents(events) {

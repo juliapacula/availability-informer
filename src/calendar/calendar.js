@@ -70,4 +70,17 @@ module.exports = class Calendar {
 
         return daysOfWeek;
     }
+
+    async countHoursInWeek() {
+        const calendarEvents = await this.getOfficeEvents(this.date.startOfMonth, this.date.endOfMonth);
+        const events = calendarEvents.map((e) => ({ start: Date.getTime(Calendar.getEventStart(e)), end: Date.getTime(Calendar.getEventEnd(e)) }))
+
+        let numberOfWorkedHours = 0;
+
+        for (const event of events) {
+            numberOfWorkedHours += Date.countHoursBetweenDates(event.start, event.end);
+        }
+
+        return Math.fround(numberOfWorkedHours);
+    }
 };
