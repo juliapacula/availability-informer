@@ -17,17 +17,16 @@ module.exports = class GoogleAuth {
             config.get('googleAuth.googleToken.redirectUris')[0],
         );
 
-        let token;
-        try {
-            const file = fs.readFileSync(path.resolve(__dirname, 'token.json'));
-            token = JSON.parse(file);
-        } catch {
-            this.getAccessToken().then(t => {
-                token = t;
-            });
-        } finally {
-            this.login(token);
+        let token = {...config.get('googleOAuthToken')};
+
+        if (!token) {
+            this.getAccessToken()
+                .then(t => {
+                    token = t;
+                });
         }
+
+        this.login(token);
     }
 
     login(token) {
@@ -35,6 +34,7 @@ module.exports = class GoogleAuth {
     }
 
     async getAccessToken() {
+        console.log('Getting new access token.');
         const authUrl = this.generateAuthUrl();
         const code = await this.readCodeFrom(authUrl);
         const {tokens} = await this.oAuth2Client.getToken(code);
